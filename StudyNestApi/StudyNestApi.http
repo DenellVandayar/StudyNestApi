@@ -1,6 +1,0 @@
-@StudyNestApi_HostAddress = http://localhost:5264
-
-GET {{StudyNestApi_HostAddress}}/weatherforecast/
-Accept: application/json
-
-###
