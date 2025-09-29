@@ -61,7 +61,7 @@ namespace StudyNestApi.Controllers
 
             return Ok(notes);
         }
-    }
+    
 
     [HttpPut("update/{id}")]
         public async Task<IActionResult> UpdateNote(string id, [FromBody] NoteRequest note)
@@ -107,5 +107,5 @@ namespace StudyNestApi.Controllers
         public string Title { get; set; } = string.Empty;
         public string Description { get; set; } = string.Empty;
     }
-
+}
 
