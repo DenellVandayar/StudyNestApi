@@ -63,6 +63,43 @@ namespace StudyNestApi.Controllers
         }
     }
 
+    [HttpPut("update/{id}")]
+        public async Task<IActionResult> UpdateNote(string id, [FromBody] NoteRequest note)
+        {
+            if (note == null)
+                return BadRequest("Note cannot be null.");
+
+            var docRef = _firestoreService.GetFirestoreDb().Collection("notes").Document(id);
+
+            var snapshot = await docRef.GetSnapshotAsync();
+            if (!snapshot.Exists)
+                return NotFound("Note not found.");
+
+            var updates = new Dictionary<string, object>
+            {
+                { "Title", note.Title },
+                { "Description", note.Description }
+            };
+
+            await docRef.UpdateAsync(updates);
+            return Ok(new { message = "Note updated successfully!" });
+        }
+
+        // ✅ DELETE: api/notes/delete/{id}
+        [HttpDelete("delete/{id}")]
+        public async Task<IActionResult> DeleteNote(string id)
+        {
+            var docRef = _firestoreService.GetFirestoreDb().Collection("notes").Document(id);
+
+            var snapshot = await docRef.GetSnapshotAsync();
+            if (!snapshot.Exists)
+                return NotFound("Note not found.");
+
+            await docRef.DeleteAsync();
+            return Ok(new { message = "Note deleted successfully!" });
+        }
+    }
+
     // DTO for adding a note
     public class NoteRequest
     {
@@ -70,4 +107,5 @@ namespace StudyNestApi.Controllers
         public string Title { get; set; } = string.Empty;
         public string Description { get; set; } = string.Empty;
     }
-}
+
+
