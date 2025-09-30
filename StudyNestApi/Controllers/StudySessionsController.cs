@@ -17,28 +17,49 @@ public class StudySessionsController : ControllerBase
 
     // ✅ Add a study session
     [HttpPost("add")]
-    public async Task<IActionResult> AddSession([FromBody] StudySession session)
-    {
-        if (session == null)
-            return BadRequest("Session cannot be null.");
+public async Task<IActionResult> AddSession([FromBody] StudySession session)
+{
+    if (session == null)
+        return BadRequest("Session cannot be null.");
 
-        var docRef = _firestore.Collection("studySessions").Document(session.Id);
-        await docRef.SetAsync(session);
-        return Ok(new { message = "Study session added successfully!" });
-    }
+    
+    if (!DateTime.TryParse(session.StudyDate, out var parsedDate))
+        return BadRequest("Invalid studyDate format. Use yyyy-MM-dd or ISO format.");
+
+    
+    var sessionData = new Dictionary<string, object>
+    {
+        { "Id", string.IsNullOrEmpty(session.Id) ? Guid.NewGuid().ToString() : session.Id },
+        { "UserId", session.UserId },
+        { "Title", session.Title },
+        { "StudyDate", parsedDate } 
+    };
+
+    var docRef = _firestore.Collection("studySessions").Document(sessionData["Id"].ToString());
+    await docRef.SetAsync(sessionData);
+
+    return Ok(new { message = "Study session added successfully!" });
+}
 
     // ✅ Get all study sessions for a user
-    [HttpGet("user/{userId}")]
-    public async Task<IActionResult> GetUserSessions(string userId)
-    {
-        var query = _firestore.Collection("studySessions")
-                              .WhereEqualTo("UserId", userId);
+   [HttpGet("user/{userId}")]
+public async Task<IActionResult> GetUserSessions(string userId)
+{
+    var query = _firestore.Collection("studySessions")
+                          .WhereEqualTo("UserId", userId);
 
-        var snapshot = await query.GetSnapshotAsync();
-        var sessions = snapshot.Documents.Select(d => d.ConvertTo<StudySession>()).ToList();
+    var snapshot = await query.GetSnapshotAsync();
 
-        return Ok(sessions);
-    }
+    var sessions = snapshot.Documents.Select(d => new StudySession(
+        id: d.Id,
+        userId: d.GetValue<string>("UserId"),
+        title: d.GetValue<string>("Title"),
+        studyDate: d.GetValue<DateTime>("StudyDate").ToString("yyyy-MM-dd") // return as string
+    )).ToList();
+
+    return Ok(sessions);
+}
+
 }
     public class StudySession
 {
