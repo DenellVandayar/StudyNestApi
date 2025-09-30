@@ -65,7 +65,7 @@ public async Task<IActionResult> AddSession([FromBody] StudySession session)
         }
     }
 
-}
+
     public class StudySession
 {
     public string Id { get; set; } = Guid.NewGuid().ToString();
