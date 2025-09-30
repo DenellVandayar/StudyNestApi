@@ -16,30 +16,33 @@ public class StudySessionsController : ControllerBase
     }
 
     // ✅ Add a study session
-    [HttpPost("add")]
+   [HttpPost("add")]
 public async Task<IActionResult> AddSession([FromBody] StudySession session)
 {
     if (session == null)
         return BadRequest("Session cannot be null.");
 
-    
-    if (!DateTime.TryParse(session.StudyDate, out var parsedDate))
-        return BadRequest("Invalid studyDate format. Use yyyy-MM-dd or ISO format.");
+    if (string.IsNullOrEmpty(session.UserId) || string.IsNullOrEmpty(session.Title) || string.IsNullOrEmpty(session.StudyDate))
+        return BadRequest("UserId, Title, and StudyDate must be provided.");
 
-    
+    // Generate ID if none is provided
+    var sessionId = string.IsNullOrEmpty(session.Id) ? Guid.NewGuid().ToString() : session.Id;
+
+    // Prepare dictionary to store in Firestore (dates as string)
     var sessionData = new Dictionary<string, object>
     {
-        { "Id", string.IsNullOrEmpty(session.Id) ? Guid.NewGuid().ToString() : session.Id },
+        { "Id", sessionId },
         { "UserId", session.UserId },
         { "Title", session.Title },
-        { "StudyDate", parsedDate } 
+        { "StudyDate", session.StudyDate } // store as string
     };
 
-    var docRef = _firestore.Collection("studySessions").Document(sessionData["Id"].ToString());
+    var docRef = _firestore.Collection("studySessions").Document(sessionId);
     await docRef.SetAsync(sessionData);
 
     return Ok(new { message = "Study session added successfully!" });
 }
+
 
     // ✅ Get all study sessions for a user
    [HttpGet("user/{userId}")]
@@ -66,7 +69,7 @@ public async Task<IActionResult> GetUserSessions(string userId)
     public string Id { get; set; } = Guid.NewGuid().ToString();
     public string UserId { get; set; } // so only their own dates show
     public string Title { get; set; } // optional, e.g., "Math Revision"
-    public DateTime StudyDate { get; set; }
+    public string StudyDate { get; set; }
 }
 
 }
