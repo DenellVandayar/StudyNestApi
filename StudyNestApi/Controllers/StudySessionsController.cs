@@ -5,7 +5,7 @@ using StudyNestApi.Services;
 namespace StudyNestApi.Controllers
 {
 [ApiController]
-[Route("api/Studysessions")]
+[Route("api/studysessions")]
 public class StudySessionsController : ControllerBase
 {
     private readonly FirestoreDb _firestore;
