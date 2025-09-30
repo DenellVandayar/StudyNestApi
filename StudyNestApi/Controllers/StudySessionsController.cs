@@ -45,23 +45,25 @@ public async Task<IActionResult> AddSession([FromBody] StudySession session)
 
 
     // ✅ Get all study sessions for a user
-   [HttpGet("user/{userId}")]
-public async Task<IActionResult> GetUserSessions(string userId)
-{
-    var query = _firestore.Collection("studySessions")
-                          .WhereEqualTo("UserId", userId);
+  [HttpGet("user/{userId}")]
+        public async Task<IActionResult> GetUserSessions(string userId)
+        {
+            var query = _firestore.Collection("studySessions")
+                                  .WhereEqualTo("UserId", userId);
 
-    var snapshot = await query.GetSnapshotAsync();
+            var snapshot = await query.GetSnapshotAsync();
 
-    var sessions = snapshot.Documents.Select(d => new StudySession(
-        id: d.Id,
-        userId: d.GetValue<string>("UserId"),
-        title: d.GetValue<string>("Title"),
-        studyDate: d.GetValue<DateTime>("StudyDate").ToString("yyyy-MM-dd") // return as string
-    )).ToList();
+            var sessions = snapshot.Documents.Select(d => new StudySession
+            {
+                Id = d.Id,
+                UserId = d.GetValue<string>("UserId"),
+                Title = d.GetValue<string>("Title"),
+                StudyDate = d.GetValue<string>("StudyDate") // already stored as string
+            }).ToList();
 
-    return Ok(sessions);
-}
+            return Ok(sessions);
+        }
+    }
 
 }
     public class StudySession
