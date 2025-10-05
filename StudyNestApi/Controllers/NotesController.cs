@@ -85,6 +85,29 @@ namespace StudyNestApi.Controllers
             return Ok(new { message = "Note updated successfully!" });
         }
 
+
+// ✅ GET: api/notes/note/{id}
+[HttpGet("note/{id}")]
+public async Task<IActionResult> GetNoteById(string id)
+{
+    var docRef = _firestoreService.GetFirestoreDb().Collection("notes").Document(id);
+    var snapshot = await docRef.GetSnapshotAsync();
+
+    if (!snapshot.Exists)
+        return NotFound("Note not found.");
+
+    var note = new
+    {
+        Id = snapshot.Id,
+        UserId = snapshot.GetValue<string>("UserId"),
+        Title = snapshot.GetValue<string>("Title"),
+        Description = snapshot.GetValue<string>("Description"),
+        CreatedAt = snapshot.GetValue<DateTime>("CreatedAt")
+    };
+
+    return Ok(note);
+}
+
         // ✅ DELETE: api/notes/delete/{id}
         [HttpDelete("delete/{id}")]
         public async Task<IActionResult> DeleteNote(string id)
