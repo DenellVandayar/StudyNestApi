@@ -45,7 +45,8 @@ namespace StudyNestApi.Services
 
                     var query = db.Collection("studySessions")
                         .WhereGreaterThan("StudyDate", startTime)
-                        .WhereLessThan("StudyDate", endTime);
+                        .WhereLessThan("StudyDate", endTime)
+                        .WhereEqualTo("NotificationSent", false);
 
                     var snapshot = await query.GetSnapshotAsync();
 
@@ -85,8 +86,8 @@ namespace StudyNestApi.Services
                         );
 
                         // Remove the session to avoid duplicate notifications
-                        await doc.Reference.DeleteAsync();
-                        _logger.LogInformation($"Sent notification and removed session {doc.Id}");
+                        await doc.Reference.UpdateAsync("NotificationSent", true);
+                        _logger.LogInformation($"Sent notification and marked session {doc.Id} as notified.");
                     }
                 }
                 catch (Exception ex)

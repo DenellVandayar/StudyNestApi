@@ -35,7 +35,7 @@ namespace StudyNestApi.Controllers
             {
                 return BadRequest("Invalid date format. Please use ISO 8601 format (e.g., yyyy-MM-ddTHH:mm:ss).");
             }
-
+            
             var sessionId = string.IsNullOrEmpty(session.Id) ? Guid.NewGuid().ToString() : session.Id;
 
             var sessionData = new Dictionary<string, object>
@@ -43,7 +43,8 @@ namespace StudyNestApi.Controllers
                 { "Id", sessionId },
                 { "UserId", session.UserId },
                 { "Title", session.Title },
-                { "StudyDate", Timestamp.FromDateTime(sessionDateTime) }
+                { "StudyDate", Timestamp.FromDateTime(sessionDateTime) },
+                { "NotificationSent", false }
             };
 
             var docRef = _firestore.Collection("studySessions").Document(sessionId);
