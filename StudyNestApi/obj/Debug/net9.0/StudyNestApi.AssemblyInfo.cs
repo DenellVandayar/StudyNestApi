@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("StudyNestApi")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+abca485546d827f969363cefed45ce451d59ff69")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+1a702a26fee5ec82755377c08e4c4345157cdbfa")]
 [assembly: System.Reflection.AssemblyProductAttribute("StudyNestApi")]
 [assembly: System.Reflection.AssemblyTitleAttribute("StudyNestApi")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
