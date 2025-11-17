@@ -40,13 +40,15 @@ namespace StudyNestApi.Services
                 {
                     var now = DateTime.UtcNow;
                     
-                    var startTime = Timestamp.FromDateTime(now.AddMinutes(9));
-                    var endTime = Timestamp.FromDateTime(now.AddMinutes(12));
+                    var startTime = Timestamp.FromDateTime(now); 
+                    var endTime = Timestamp.FromDateTime(now.AddMinutes(30));
 
-                    var query = db.Collection("studySessions")
-                        .WhereGreaterThan("StudyDate", startTime)
-                        .WhereLessThan("StudyDate", endTime)
-                        .WhereEqualTo("NotificationSent", false);
+                    _logger.LogInformation($"Checking for sessions between {now} and {now.AddMinutes(30)} UTC");
+
+                   var query = db.Collection("studySessions")
+                    .WhereGreaterThan("StudyDate", startTime)
+                    .WhereLessThan("StudyDate", endTime)
+                    .WhereEqualTo("NotificationSent", false);
 
                     var snapshot = await query.GetSnapshotAsync();
 
