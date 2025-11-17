@@ -20,6 +20,15 @@ namespace StudyNestApi.Services
                 {
                     Title = title,
                     Body = body,
+                },
+                Android = new AndroidConfig()
+                {
+                    Priority = Priority.High,
+                    Notification = new AndroidNotification()
+                    {
+                        ChannelId = "study_channel_id",
+                        ClickAction = "FLUTTER_NOTIFICATION_CLICK",
+                    }
                 }
             };
 
