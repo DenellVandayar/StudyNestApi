@@ -22,8 +22,10 @@ namespace StudyNestApi.Controllers
             if (note == null || string.IsNullOrEmpty(note.UserId))
                 return BadRequest("Note or UserId cannot be null.");
 
+            string noteId = string.IsNullOrEmpty(note.Id) ? Guid.NewGuid().ToString() : note.Id;
             var noteData = new Dictionary<string, object>
             {
+                { "Id", noteId },
                 { "UserId", note.UserId },
                 { "Title", note.Title },
                 { "Description", note.Description },
@@ -126,6 +128,7 @@ public async Task<IActionResult> GetNoteById(string id)
     // DTO for adding a note
     public class NoteRequest
     {
+        public string Id { get; set; } = string.Empty;
         public string UserId { get; set; } = string.Empty;
         public string Title { get; set; } = string.Empty;
         public string Description { get; set; } = string.Empty;

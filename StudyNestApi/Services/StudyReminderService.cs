@@ -41,7 +41,7 @@ namespace StudyNestApi.Services
                     var now = DateTime.UtcNow;
                     
                     var startTime = Timestamp.FromDateTime(now.AddMinutes(9));
-                    var endTime = Timestamp.FromDateTime(now.AddMinutes(11));
+                    var endTime = Timestamp.FromDateTime(now.AddMinutes(12));
 
                     var query = db.Collection("studySessions")
                         .WhereGreaterThan("StudyDate", startTime)
