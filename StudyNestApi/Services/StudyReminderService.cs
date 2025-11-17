@@ -40,10 +40,10 @@ namespace StudyNestApi.Services
                 {
                     var now = DateTime.UtcNow;
                     
-                    var startTime = Timestamp.FromDateTime(now); 
-                    var endTime = Timestamp.FromDateTime(now.AddMinutes(30));
+                    var startTime = Timestamp.FromDateTime(now.AddMinutes(9));
+                    var endTime = Timestamp.FromDateTime(now.AddMinutes(11));
 
-                    _logger.LogInformation($"Checking for sessions between {now} and {now.AddMinutes(30)} UTC");
+                    _logger.LogInformation($"Checking for sessions between +9 and +11 mins from now.");
 
                    var query = db.Collection("studySessions")
                     .WhereGreaterThan("StudyDate", startTime)
